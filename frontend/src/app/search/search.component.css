@@ -21,6 +21,7 @@
   padding-left: 4px;
   padding-right: 2px;
   cursor: pointer;
+  float:right;
 }
 
 #filters {
