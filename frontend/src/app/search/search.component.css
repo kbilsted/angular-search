@@ -1,0 +1,72 @@
+
+#main {
+  background-color: #e0e0e0;
+  text-align: left;
+}
+
+
+.title {
+  color: #8d44ae;
+  font-size: 1.68em;
+  font-family: 'helvetica' sans;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.filterbutton {
+  border-style: outset;
+  border-width: 1px;
+  padding-left: 4px;
+  padding-right: 2px;
+  cursor: pointer;
+}
+
+#filters {
+  background-color: #e9e9e9;
+  text-align: left;
+  width: 100%;
+  border-top: inset;
+}
+
+  #filters li {
+    list-style: none;
+  }
+
+
+#requiredFilters {
+  font-family: Consolas;
+  font-size: larger;
+  color: white;
+}
+
+  #requiredFilters .button {
+    background-color: darkgreen;
+    display: table;
+  }
+
+
+#exclusionsFilters {
+  font-family: Consolas;
+  font-size: larger;
+  color: white;
+}
+
+  #exclusionsFilters .button {
+    background-color: #ff0000;
+    display: table;
+  }
+
+#searchResults {
+  border-top: outset;
+}
+
+#videoMessage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2.4em;
+  margin: 0;
+  color: white;
+}
