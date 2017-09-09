@@ -45,11 +45,13 @@
     <table border="1" cellpadding="4">
       <thead>
         <tr>
+          <th>Row</th>
           <th *ngFor="let item of searchResult.columns">{{item}}</th>
         </tr>
       </thead>
       <tbody style="background-color:white">
-        <tr *ngFor="let item of searchResult.lines;">
+        <tr *ngFor="let item of searchResult.lines;let i = index">
+          <td align="right">{{i}}</td>
           <td>{{ item.name }} <span (click)="addRequireFilter(0,item.name)" class="filterbutton"><i class="icon-lock"></i></span> <span (click)="addExcludedFilter(0,item.name)" class="filterbutton"><i class="icon-external-link"></i></span></td>
           <td>{{ item.surname }} <span class="filterbutton"><i class="icon-lock"></i></span> <span class="filterbutton"><i class="icon-zoom-out"></i></span></td>
         </tr>
