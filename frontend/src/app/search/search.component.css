@@ -40,24 +40,15 @@
   font-family: Consolas;
   font-size: larger;
   color: white;
+  background-color: darkgreen;
 }
-
-  #requiredFilters .button {
-    background-color: darkgreen;
-    display: table;
-  }
-
 
 #exclusionsFilters {
   font-family: Consolas;
   font-size: larger;
   color: white;
+  background-color: #ff0000;
 }
-
-  #exclusionsFilters .button {
-    background-color: #ff0000;
-    display: table;
-  }
 
 #searchResults {
   border-top: outset;
