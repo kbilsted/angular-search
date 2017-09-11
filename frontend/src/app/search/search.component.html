@@ -52,8 +52,15 @@
       <tbody style="background-color:white">
         <tr *ngFor="let item of searchResult.lines;let i = index">
           <td align="right">{{i}}</td>
-          <td>{{ item.name }} <span (click)="addRequireFilter(0,item.name)" class="filterbutton"><i class="icon-lock"></i></span> <span (click)="addExcludedFilter(0,item.name)" class="filterbutton"><i class="icon-external-link"></i></span></td>
-          <td>{{ item.surname }} <span class="filterbutton"><i class="icon-lock"></i></span> <span class="filterbutton"><i class="icon-zoom-out"></i></span></td>
+          <td *ngFor="let column of item; let colIndex = index">
+            {{column}}
+            <span (click)="addRequireFilter(colIndex,column)" class="filterbutton">
+              <i class="icon-lock"></i>
+            </span>
+            <span (click)="addExcludedFilter(colIndex,column)" class="filterbutton">
+              <i class="icon-external-link"></i>
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
