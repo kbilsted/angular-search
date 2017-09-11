@@ -36,14 +36,14 @@
   }
 
 
-#requiredFilters {
+.required {
   font-family: Consolas;
   font-size: larger;
   color: white;
   background-color: darkgreen;
 }
 
-#exclusionsFilters {
+.excluded {
   font-family: Consolas;
   font-size: larger;
   color: white;
