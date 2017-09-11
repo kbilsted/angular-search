@@ -15,9 +15,9 @@
     <h1 class="title"><i class="icon-filter"></i> Filters</h1>
     <div id="requiredFilters">
       <ul >
-        <li class="required" *ngFor="let item of searchResult.filters.required; let i = index;">
+        <li class="required" *ngFor="let item of searchRequest.required; let i = index;">
           <span class="button">
-            {{item.column}}: <input type="text" value="{{item.value}}" />
+            {{item.column}}: <input [(ngModel)]="item.value" />
             &nbsp;<i (click)="clearRequired(i)" class="icon-trash" style=" cursor: pointer;"></i>&nbsp;
           </span>
         </li>
@@ -26,9 +26,9 @@
 
     <div id="exclusionsFilters">
       <ul>
-        <li class="excluded" *ngFor="let item of searchResult.filters.excluded; let i = index;">
+        <li class="excluded" *ngFor="let item of searchRequest.excluded; let i = index;">
           <span class="button">
-            {{item.column}}: <input type="text" value="{{item.value}}" />
+            {{item.column}}: <input [(ngModel)]="item.value" />
             &nbsp;<i (click)="clearExcluded(i)" class="icon-trash" style=" cursor: pointer;"></i>&nbsp;
           </span>
         </li>
@@ -36,7 +36,7 @@
     </div>
     <div>
       <button (click)="clearSearchFilters()">Search <i class="icon-search"></i></button>&nbsp;
-      <button (click)="clearSearchFilters()">clear filters <i class="icon-off"></i></button>
+      <button (click)="clearSearchFilters()">Clear filters <i class="icon-off"></i></button>
     </div>
   </div>
 

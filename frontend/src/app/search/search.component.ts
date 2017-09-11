@@ -7,11 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
     public searchResult;
+    public searchRequest;
 
     constructor() { }
 
-    ngOnInit() {
-        this.searchResult = JSON.parse(`
+  private jsonFromServer = `
 {
   "filters":
   {
@@ -36,29 +36,36 @@ export class SearchComponent implements OnInit {
     [ "Barry4", "White" ],
     [ "PEter3", "Meyer" ],
     [ "Barry2", "White" ],
-    [ "PEter1", "Meyer" ]
-
+    [ "PEter1", "Meyer" ],
+    [ "PEter1", "Sellers" ]
 ]
-}`);
+}`;
+
+    ngOnInit() {
+      this.searchResult = JSON.parse(this.jsonFromServer);
+      this.searchRequest = {
+        required: this.searchResult.filters.required,
+        excluded: this.searchResult.filters.excluded,
+      }
     }
 
     clearSearchFilters() {
-        this.searchResult.filters.required = [];
-        this.searchResult.filters.excluded = [];
+      this.searchRequest.required = [];
+      this.searchRequest.excluded = [];
     }
 
     clearRequired(idx) {
-        this.searchResult.filters.required.splice(idx, 1);
+      this.searchRequest.required.splice(idx, 1);
     }
 
     clearExcluded(idx) {
-        this.searchResult.filters.excluded.splice(idx, 1);
+      this.searchRequest.excluded.splice(idx, 1);
     }
 
     addIfNotExist(collectionToAddTo, item, compareValue) {
         var cmp = function (val) { return val.value == compareValue };
 
-        var found = this.searchResult.filters.required.some(cmp) || this.searchResult.filters.excluded.some(cmp);
+        var found = this.searchRequest.required.some(cmp) || this.searchRequest.excluded.some(cmp);
 
         if (!found) {
             collectionToAddTo.push(item);
@@ -67,13 +74,11 @@ export class SearchComponent implements OnInit {
 
     addRequireFilter(idx, cellvalue) {
         var item = { column: this.searchResult.columns[idx], value: cellvalue };
-        this.addIfNotExist(this.searchResult.filters.required, item, cellvalue);
+        this.addIfNotExist(this.searchRequest.required, item, cellvalue);
     }
-
 
     addExcludedFilter(idx, cellvalue) {
         var item = { column: this.searchResult.columns[idx], value: cellvalue };
-        this.addIfNotExist(this.searchResult.filters.excluded, item, cellvalue);
+        this.addIfNotExist(this.searchRequest.excluded, item, cellvalue);
     }
-
 }
