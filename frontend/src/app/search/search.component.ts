@@ -1,5 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 
+// First we import the classes required
+import { Injectable } from '@angular/core';
+import { Http, Response } from '@angular/http';
+import { Headers, RequestOptions } from '@angular/http';
+
+// All the RxJS stuff we need
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+
 @Component({
     selector: 'app-search',
     templateUrl: './search.component.html',
@@ -9,45 +19,25 @@ import { Component, OnInit } from '@angular/core';
 export class SearchComponent implements OnInit {
     public searchResult;
     public searchRequest;
-    public shareUrl;
+    public shareUrl : string;
+    public databases : string[];
 
-    constructor() { }
+    private backendUrl = 'http://localhost:62907/';
+
+    constructor(private http: Http) {
+    }
 
   private jsonFromServer = `
 {
-  "filters":
-  {
-    "required":[ {"column": "Eventid", "value": "123"}],
-    "excluded":[{"column":"TransactionId", "value": "aa"}]
-  },
-  "columns":["firstname","surname"],
-  "lines":
-  [
-    [ "Barry", "White" ],
-    [ "PEter", "Meyer" ],
-    [ "Barry", "White" ],
-    [ "PEter", "Meyer" ],
-    [ "Barry", "White" ],
-    [ "PEter", "Meyer" ],
-    [ "Barry", "White" ],
-    [ "PEter9", "Meyer" ],
-    [ "Barry8", "White" ],
-    [ "PEter7", "Meyer" ],
-    [ "Barry6", "White" ],
-    [ "PEter5", "Meyer" ],
-    [ "Barry4", "White" ],
-    [ "PEter3", "Meyer" ],
-    [ "Barry2", "White" ],
-    [ "PEter1", "Meyer" ],
-    [ "PEter1", "Sellers" ]
-]
+  "columns":[],
+  "lines":  []
 }`;
 
     updateShareUrl() {
         let args = encodeURIComponent(JSON.stringify((this.searchRequest)));
-        let proto = window.location.protocol
-        let base = window.location.host
-        this.shareUrl = proto + '//' + base +'?searchRequest=' + args;
+        let proto = window.location.protocol;
+        let base = window.location.host;
+        this.shareUrl = proto + '//' + base + '?searchRequest=' + args;
     }
 
     getGetParameter()
@@ -57,8 +47,6 @@ export class SearchComponent implements OnInit {
             normalizedQueryString = normalizedQueryString.substring(1);
         }
         var params = new URLSearchParams(normalizedQueryString).get('searchRequest');
-        console.log("url1 " + params);
-
         return params;
     }
 
@@ -68,17 +56,27 @@ export class SearchComponent implements OnInit {
         let params = this.getGetParameter();
         if (params == null) {
             this.searchRequest = {
-                required: this.searchResult.filters.required,
-                excluded: this.searchResult.filters.excluded,
+                required: [],
+                excluded: [],
+                dbname: "",
             }
         }
         else {
             params = decodeURIComponent(params);
-            console.log("url2 " + params);
             this.searchRequest = JSON.parse(params);
         }
 
         this.updateShareUrl();
+
+        this.http.get(this.backendUrl + "/api/LogDatabases")
+          .map(x => x.json() || ["REFRESH BROWSER"])
+          .subscribe(x => {
+            this.databases = x;
+            this.searchRequest.dbname = x[0];
+
+            this.doTheSearch();
+          });
+      
     }
 
     clearSearchFilters() {
@@ -92,7 +90,7 @@ export class SearchComponent implements OnInit {
       this.updateShareUrl();
     }
 
-    clearExcluded(idx) {
+    clearExcluded(idx: number) {
       this.searchRequest.excluded.splice(idx, 1);
       this.updateShareUrl();
     }
@@ -117,5 +115,16 @@ export class SearchComponent implements OnInit {
     addExcludedFilter(idx, cellvalue) {
         var item = { column: this.searchResult.columns[idx], value: cellvalue };
         this.addIfNotExist(this.searchRequest.excluded, item, cellvalue);
+    }
+
+    doTheSearch() {
+      let args = `filterSpecification=${JSON.stringify(this.searchRequest)}`;
+      this.http.get(`${this.backendUrl}/api/LogEntries?${args}`)
+        .map(x => x.json() || ["REFRESH BROWSER"])
+        .subscribe(x => {
+          console.log(x);
+          this.searchResult = x;
+        });
+
     }
 }

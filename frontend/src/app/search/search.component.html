@@ -39,8 +39,11 @@
       </tr>
     </table>
     <br />
-    <div>
-      <button (click)="clearSearchFilters()">Search <i class="icon-search"></i></button>&nbsp;
+    <div> 
+      <select [(ngModel)]="searchRequest.dbname">
+        <option *ngFor="let db of databases;" [value]="db">{{db}}</option>
+      </select>
+      <button (click)="doTheSearch()">Search <i class="icon-search"></i></button>&nbsp;
       <button (click)="clearSearchFilters()">Clear filters <i class="icon-off"></i></button>
     </div>
   </div>
