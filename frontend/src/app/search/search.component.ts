@@ -50,36 +50,39 @@ export class SearchComponent implements OnInit {
         return params;
     }
 
-    ngOnInit() {
-        this.searchResult = JSON.parse(this.jsonFromServer);
+  setSearchFiltersFromUrlParameters() {
+      let params = this.getGetParameter();
+      if (params == null) {
+          this.searchRequest = {
+            required: [],
+            excluded: [],
+            dbname: "",
+          }
+      } else {
+          params = decodeURIComponent(params);
+          this.searchRequest = JSON.parse(params);
+      }
+  }
 
-        let params = this.getGetParameter();
-        if (params == null) {
-            this.searchRequest = {
-                required: [],
-                excluded: [],
-                dbname: "",
-            }
-        }
-        else {
-            params = decodeURIComponent(params);
-            this.searchRequest = JSON.parse(params);
-        }
+  ngOnInit() {
+    this.searchResult = JSON.parse(this.jsonFromServer);
 
-        this.updateShareUrl();
+    this.setSearchFiltersFromUrlParameters();
+    this.updateShareUrl();
 
-        this.http.get(this.backendUrl + "/api/LogDatabases")
-          .map(x => x.json() || ["REFRESH BROWSER"])
-          .subscribe(x => {
-            this.databases = x;
-            this.searchRequest.dbname = x[0];
+    this.http.get(this.backendUrl + "/api/LogDatabases")
+      .map(x => x.json() || ["REFRESH BROWSER"])
+      .subscribe(x => {
+        this.databases = x;
+        this.searchRequest.dbname = x[0];
 
-            this.doTheSearch();
-          });
-      
-    }
+        this.doTheSearch();
+      });
 
-    clearSearchFilters() {
+  }
+
+
+  clearSearchFilters() {
       this.searchRequest.required = [];
       this.searchRequest.excluded = [];
       this.updateShareUrl();
